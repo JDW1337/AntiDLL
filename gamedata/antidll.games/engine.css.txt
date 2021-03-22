@@ -1,0 +1,14 @@
+"Games"
+{
+	"#default"
+	{
+		"Signatures"
+		{
+			"Signature"
+			{
+				"library" "engine"
+				"linux" "@_ZN11CBaseClient19ProcessListenEventsEP16CLC_ListenEvents"
+			}
+		}
+	}
+}
