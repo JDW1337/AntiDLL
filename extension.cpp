@@ -30,7 +30,7 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CCLCMsg_ListenEvents*, msg)
 #else
 DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 #endif
-{
+{ 
 	auto client = (reinterpret_cast<CBaseClient*>(this + 0x4))->GetPlayerSlot() + 1; // OR -0x4 ? (OB OR V34)
 	IGamePlayer* pClient = playerhelpers->GetGamePlayer(client);
 
