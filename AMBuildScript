@@ -335,6 +335,7 @@ class ExtensionConfig(object):
 
     if sdk.name == 'csgo' and builder.target_platform == 'linux':
       compiler.linkflags += ['-lstdc++']
+      compiler.defines += ['_GLIBCXX_USE_CXX11_ABI=0']
 
     for path in paths:
       compiler.cxxincludes += [os.path.join(sdk.path, *path)]

@@ -1,0 +1,15 @@
+"Game Master"
+{
+	"engine.ep1.txt"
+	{
+		"engine" "original"
+	}
+	"engine.css.txt"
+	{
+		"engine" "css"
+	}
+	"engine.csgo.txt"
+	{
+		"engine" "csgo"
+	}
+}

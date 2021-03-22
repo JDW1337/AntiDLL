@@ -1,0 +1,14 @@
+"Games"
+{
+	"#default"
+	{
+		"Signatures"
+		{
+			"Signature"
+			{
+				"library" "engine"
+				"linux"   "\x55\x89\xE5\x57\x56\x8D\x7D\xA8\x53\x83\xEC\x6C"
+			}
+		}
+	}
+}
