@@ -16,7 +16,7 @@ CDetour* pDetour = nullptr;
 IGameConfig* pGameConfig = nullptr;
 IForward* forwardCheatDetected = nullptr;
 
-class CBaseClient : public IClient {};
+class CBaseClient : public IGameEventListener2, public IClient {};
 
 class CLC_ListenEvents
 {
@@ -31,7 +31,7 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CCLCMsg_ListenEvents*, msg)
 DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 #endif
 {  
-	auto client = (reinterpret_cast<CBaseClient*>(this + 0x4))->GetPlayerSlot() + 1; // OR -0x4 ? (OB OR V34)
+	auto client = (reinterpret_cast<CBaseClient*>(this))->GetPlayerSlot() + 1;
 	IGamePlayer* pClient = playerhelpers->GetGamePlayer(client);
 
 	if (pClient->IsFakeClient()) return DETOUR_MEMBER_CALL(ListenEvents)(msg);
@@ -39,29 +39,33 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 	auto counter = 0;
 
 	#if SOURCE_ENGINE == SE_CSGO
+
 	CBitVec<MAX_EVENT_NUMBER> EventArray;
-	for (auto i = 0; i < msg->event_mask_size(); i++) {
+	for (auto i = 0; i < msg->event_mask_size(); i++) 
+	{
 		EventArray.SetDWord(i, msg->event_mask(i));
 	}
 
-	auto index = EventArray.FindNextSetBit(0);
+	#endif
 
-	while (EventArray.FindNextSetBit(0) >= 0) {
-		index = EventArray.FindNextSetBit(index + 1);
-		counter++;
-	}
-
-	#else 
-
-	for (auto i = 0; i < MAX_EVENT_NUMBER; i++) {
-		if (msg->m_EventArray.Get(i)) {
+	for (auto i = 0; i < MAX_EVENT_NUMBER; i++) 
+	{
+		#if SOURCE_ENGINE == SE_CSGO
+		if (EventArray.Get(i)) 
+		#else 
+		if (msg->m_EventArray.Get(i)) 
+		#endif
+		{
 			counter++;
 		}
-	}
-
-	#endif
+	} 
 	
-	if (counter != EVENTS) {
+	#if SOURCE_ENGINE == SE_CSGO
+	if (counter != 132 || counter != 133 || counter != 169) 
+	#else 
+	if (counter != EVENTS) 
+	#endif
+	{
 		forwardCheatDetected->PushCell(client);
 		forwardCheatDetected->Execute();
 	}
@@ -88,4 +92,5 @@ void AntiDLL::SDK_OnUnload()
 {
 	gameconfs->CloseGameConfigFile(pGameConfig);
 	forwards->ReleaseForward(forwardCheatDetected);
+	pDetour->DisableDetour();
 }
