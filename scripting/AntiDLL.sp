@@ -18,7 +18,7 @@ public Plugin myinfo =
 
 enum 
 {
-    KICK,
+    KICK = 1,
     BAN,
     SBBAN,
     MABAN
@@ -41,6 +41,8 @@ public void OnPluginStart()
     HookConVarChange(hEnable, OnConVarHookEnable);
     HookConVarChange(hMethod, OnConVarHookMethod);
     HookConVarChange(hMethod, OnConVarHookBlockingTime);
+
+    LoadTranslations("antidll.phrases");
 
     AutoExecConfig(true, "antidll");
 }

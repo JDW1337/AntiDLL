@@ -46,7 +46,7 @@
  */
 
 #include "smsdk_ext.h"
-
+#include <utldict.h>
 /**
  * @brief Sample implementation of the SDK Extension.
  * Note: Uncomment one of the pre-defined virtual functions in order to use it.
@@ -121,6 +121,45 @@ public:
 	 */
 	//virtual bool SDK_OnMetamodPauseChange(bool paused, char *error, size_t maxlen);
 #endif
+};
+
+class CGameEventCallback
+{
+public:
+        void                            *m_pCallback;           // callback pointer
+        int                              m_nListenerType;       // client or server side ?
+};
+
+class CGameEventDescriptor
+{
+public:
+        CGameEventDescriptor()
+        {
+                eventid = -1;
+                keys = NULL;
+                local = false;
+                reliable = true;
+                elementIndex = -1;
+
+                numSerialized = 0;
+                numUnSerialized = 0;
+                totalSerializedBits = 0;
+                totalUnserializedBits = 0;
+        }
+
+public:
+        int                     eventid;        // network index number, -1 = not networked
+        int                     elementIndex;
+        KeyValues       *keys;          // KeyValue describing data types, if NULL only name
+    CUtlVector<CGameEventCallback*>     listeners;      // registered listeners
+        bool            local;          // local event, never tell clients about that
+        bool            reliable;       // send this event as reliable message
+
+        // Extra data for network monitoring
+        int numSerialized;
+        int numUnSerialized;
+        int totalSerializedBits;
+        int totalUnserializedBits;
 };
 
 #endif // _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_

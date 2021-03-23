@@ -9,6 +9,8 @@
 #include "extension.h"
 #include "CDetour/detours.h"
 
+#include <iostream>
+
 AntiDLL antiDLL;
 SMEXT_LINK(&antiDLL);
 
@@ -18,56 +20,37 @@ IForward* forwardCheatDetected = nullptr;
 
 class CBaseClient : public IGameEventListener2, public IClient {};
 
-class CLC_ListenEvents
-{
-public:
-	char nop[16]; 
-	CBitVec<MAX_EVENT_NUMBER> m_EventArray;
-};
-
-#if SOURCE_ENGINE == SE_CSGO
 DETOUR_DECL_MEMBER1(ListenEvents, bool, CCLCMsg_ListenEvents*, msg)
-#else
-DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
-#endif
-{  
+{
 	auto client = (reinterpret_cast<CBaseClient*>(this))->GetPlayerSlot() + 1;
 	IGamePlayer* pClient = playerhelpers->GetGamePlayer(client);
 
 	if (pClient->IsFakeClient()) return DETOUR_MEMBER_CALL(ListenEvents)(msg);
 
-	auto counter = 0;
-
-	#if SOURCE_ENGINE == SE_CSGO
-
 	CBitVec<MAX_EVENT_NUMBER> EventArray;
+
 	for (auto i = 0; i < msg->event_mask_size(); i++) 
 	{
 		EventArray.SetDWord(i, msg->event_mask(i));
 	}
 
-	#endif
+	int index = EventArray.FindNextSetBit(0);
 
-	for (auto i = 0; i < MAX_EVENT_NUMBER; i++) 
+	while(index >= 0)
 	{
-		#if SOURCE_ENGINE == SE_CSGO
-		if (EventArray.Get(i)) 
-		#else 
-		if (msg->m_EventArray.Get(i)) 
-		#endif
+		CGameEventDescriptor *descriptor = NULL;//g_GameEventManager.GetEventDescriptor(index);
+
+		/*if (descriptor)
 		{
-			counter++;
+			g_GameEventManager.AddListener(this, descriptor, CGameEventManager::CLIENTSTUB);
 		}
-	} 
-	
-	#if SOURCE_ENGINE == SE_CSGO
-	if (counter != 132 || counter != 133 || counter != 169) 
-	#else 
-	if (counter != EVENTS) 
-	#endif
-	{
-		forwardCheatDetected->PushCell(client);
-		forwardCheatDetected->Execute();
+		else
+		{
+			DevMsg("ProcessListenEvents: game event %i not found.\n", index );
+			return false;
+		}*/
+
+		index = EventArray.FindNextSetBit(index + 1);
 	}
 
 	return DETOUR_MEMBER_CALL(ListenEvents)(msg);
