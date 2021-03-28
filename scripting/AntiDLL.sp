@@ -12,7 +12,7 @@ public Plugin myinfo =
 {
 	name = "AntiDLL Handler",
 	author = "JDW",
-	version	= "1.0",
+	version	= "1.3",
 	url = "WWW"
 };
 
@@ -40,7 +40,7 @@ public void OnPluginStart()
 
     HookConVarChange(hEnable, OnConVarHookEnable);
     HookConVarChange(hMethod, OnConVarHookMethod);
-    HookConVarChange(hMethod, OnConVarHookBlockingTime);
+    HookConVarChange(hBlockingTime, OnConVarHookBlockingTime);
 
     LoadTranslations("antidll.phrases");
 
