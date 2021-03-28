@@ -8,6 +8,7 @@
 			{
 				"library" "engine"
 				"linux" "@_ZN11CBaseClient19ProcessListenEventsEP16CLC_ListenEvents"
+				"windows" "\x53\x56\x57\x8D\x79\xF8"
 			}
 		}
 	}

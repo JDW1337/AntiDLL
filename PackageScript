@@ -12,6 +12,8 @@ folder_list = [
   'addons/sourcemod/scripting/include',
   'addons/sourcemod/gamedata/antidll.games',
   'addons/sourcemod/translations',
+  'addons/sourcemod/data/antidll',
+  'addons/sourcemod/plugins',
 ]
 
 # Create the distribution folder hierarchy.
@@ -31,7 +33,9 @@ def CopyFiles(src, dest, files):
 
 # Include files 
 CopyFiles('scripting/include', 'addons/sourcemod/scripting/include',
-  [ 'antidll.inc', ]
+  [ 'antidll.inc', 
+    'materialadmin.inc',
+    'sourcebanspp.inc']
 )
 
 CopyFiles('scripting', 'addons/sourcemod/scripting',
@@ -51,6 +55,17 @@ CopyFiles('translations', 'addons/sourcemod/translations',
   [ 'antidll.phrases.txt',
   ]
 )
+
+CopyFiles('data/antidll', 'addons/sourcemod/data/antidll',
+  [ 'events_detection.txt',
+  ]
+)
+
+CopyFiles('plugins', 'addons/sourcemod/plugins',
+  [ 'AntiDLL.smx',
+  ]
+)
+
 
 # Config Files
 #CopyFiles('configs', 'addons/sourcemod/configs',

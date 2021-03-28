@@ -32,21 +32,29 @@
 #ifndef _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_
 #define _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_
 
-#if SOURCE_ENGINE == SE_CSGO
-	#define EVENTS 132
-#elif SOURCE_ENGINE == SE_CSS
-	#define EVENTS 47
-#elif SOURCE_ENGINE == SE_EPISODEONE
-	#define EVENTS 25
-#endif
-
 /**
  * @file extension.h
  * @brief Sample extension code header.
  */
 
 #include "smsdk_ext.h"
-#include <utldict.h>
+
+#include <igameevents.h>
+#include <iclient.h>
+#include <bitvec.h>
+#include <vector>
+#include <string>
+#include <fstream>
+
+class CLC_ListenEvents
+{
+public:
+	char nop[16]; 
+	CBitVec<MAX_EVENT_NUMBER> m_EventArray;
+};
+
+class CBaseClient : public IGameEventListener2, public IClient {};
+
 /**
  * @brief Sample implementation of the SDK Extension.
  * Note: Uncomment one of the pre-defined virtual functions in order to use it.
@@ -98,7 +106,7 @@ public:
 	 * @param late			Whether or not Metamod considers this a late load.
 	 * @return				True to succeed, false to fail.
 	 */
-	//virtual bool SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bool late);
+	virtual bool SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bool late);
 
 	/**
 	 * @brief Called when Metamod is detaching, after the extension version is called.
@@ -121,45 +129,6 @@ public:
 	 */
 	//virtual bool SDK_OnMetamodPauseChange(bool paused, char *error, size_t maxlen);
 #endif
-};
-
-class CGameEventCallback
-{
-public:
-        void                            *m_pCallback;           // callback pointer
-        int                              m_nListenerType;       // client or server side ?
-};
-
-class CGameEventDescriptor
-{
-public:
-        CGameEventDescriptor()
-        {
-                eventid = -1;
-                keys = NULL;
-                local = false;
-                reliable = true;
-                elementIndex = -1;
-
-                numSerialized = 0;
-                numUnSerialized = 0;
-                totalSerializedBits = 0;
-                totalUnserializedBits = 0;
-        }
-
-public:
-        int                     eventid;        // network index number, -1 = not networked
-        int                     elementIndex;
-        KeyValues       *keys;          // KeyValue describing data types, if NULL only name
-    CUtlVector<CGameEventCallback*>     listeners;      // registered listeners
-        bool            local;          // local event, never tell clients about that
-        bool            reliable;       // send this event as reliable message
-
-        // Extra data for network monitoring
-        int numSerialized;
-        int numUnSerialized;
-        int totalSerializedBits;
-        int totalUnserializedBits;
 };
 
 #endif // _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_

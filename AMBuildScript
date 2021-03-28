@@ -19,7 +19,7 @@ WinLinux = ['windows', 'linux']
 WinLinuxMac = ['windows', 'linux', 'mac']
 
 PossibleSDKs = {
-  'episode1':  SDK('HL2SDK', '1.ep1', '1', 'EPISODEONE', WinLinux, 'episode1'),
+  'episode1':  SDK('HL2SDK', '2.ep1', '1', 'EPISODEONE', WinLinux, 'episode1'),
   'css':  SDK('HL2SDKCSS', '2.css', '6', 'CSS', WinLinuxMac, 'css'),
   'csgo': SDK('HL2SDKCSGO', '2.csgo', '21', 'CSGO', WinLinuxMac, 'csgo'),
 }
@@ -323,6 +323,7 @@ class ExtensionConfig(object):
       compiler.defines += ['COMPILER_MSVC', 'COMPILER_MSVC32']
     else:
       compiler.defines += ['COMPILER_GCC']
+      compiler.defines += ['_GLIBCXX_USE_CXX11_ABI=0']
 
     # For everything after Swarm, this needs to be defined for entity networking
     # to work properly with sendprop value changes.
@@ -335,7 +336,6 @@ class ExtensionConfig(object):
 
     if sdk.name == 'csgo' and builder.target_platform == 'linux':
       compiler.linkflags += ['-lstdc++']
-      compiler.defines += ['_GLIBCXX_USE_CXX11_ABI=0']
 
     for path in paths:
       compiler.cxxincludes += [os.path.join(sdk.path, *path)]

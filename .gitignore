@@ -1,4 +1,3 @@
-build/
 # Binaries
 *.dll
 *.dylib
@@ -30,6 +29,7 @@ LIB-Debug/
 
 # AMBuild build directories
 build/
+plugins/
 obj-*/
 *~
 *.rej

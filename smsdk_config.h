@@ -40,9 +40,9 @@
 /* Basic information exposed publicly */
 #define SMEXT_CONF_NAME			"AntiDLL"
 #define SMEXT_CONF_DESCRIPTION	"Mini protection against internal cheats"
-#define SMEXT_CONF_VERSION		"1.1"
+#define SMEXT_CONF_VERSION		"1.3"
 #define SMEXT_CONF_AUTHOR		"JDW"
-#define SMEXT_CONF_URL			"WWW"
+#define SMEXT_CONF_URL			"discord.gg/swZD3vUt5C"
 #define SMEXT_CONF_LOGTAG		"AntiDLL"
 #define SMEXT_CONF_LICENSE		"GPL"
 #define SMEXT_CONF_DATESTRING	__DATE__
@@ -56,7 +56,7 @@
  * @brief Sets whether or not this plugin required Metamod.
  * NOTE: Uncomment to enable, comment to disable.
  */
-//#define SMEXT_CONF_METAMOD		
+#define SMEXT_CONF_METAMOD		
 
 /** Enable interfaces you want to use here by uncommenting lines */
 #define SMEXT_ENABLE_FORWARDSYS
@@ -68,7 +68,7 @@
 #define SMEXT_ENABLE_GAMEHELPERS
 //#define SMEXT_ENABLE_TIMERSYS
 //#define SMEXT_ENABLE_THREADER
-//#define SMEXT_ENABLE_LIBSYS
+#define SMEXT_ENABLE_LIBSYS
 //#define SMEXT_ENABLE_MENUS
 //#define SMEXT_ENABLE_ADTFACTORY
 //#define SMEXT_ENABLE_PLUGINSYS
