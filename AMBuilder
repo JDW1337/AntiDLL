@@ -47,7 +47,7 @@ for sdk_name in Extension.sdks:
     if builder.target_platform == 'linux':
       lib_path = os.path.join(sdk.path, 'lib', 'linux32', 'release', 'libprotobuf.a')
     elif builder.target_platform == 'windows':
-      lib_path = os.path.join(sdk.path, 'lib', 'win32', 'release', 'vs2015', 'libprotobuf.lib')
+      lib_path = os.path.join(sdk.path, 'lib', 'win32', 'release', 'vs2017', 'libprotobuf.lib')
 
     compiler.linkflags.insert(0, binary.Dep(lib_path))
 
