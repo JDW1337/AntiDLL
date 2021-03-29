@@ -66,9 +66,8 @@ public void AD_OnCheatDetected(const int client)
 
     for (int i; i < hWhiteList.Length; i++)
 	{
-    	hWhiteList.GetString(i, sBuffer, sizeof(sBuffer));
+    	hWhiteList.FindString(i, sBuffer, sizeof(sBuffer));
 
-    	TrimString(sBuffer);
     	if (sBuffer[0] == 0)
       		continue;
     	else if(!strcmp(sAuthID, sBuffer))
