@@ -137,12 +137,10 @@ void LoadWhiteList()
 		LogError("[AntiDLL] Couldn't load SteamIDs from %s", sPath);
 		return;
 	}
-	char sBuffer[64];
+	char sBuffer[32];
 	while (!hFile.EndOfFile())
 	{
 		hFile.ReadLine(sBuffer, sizeof(sBuffer));
-		if (sBuffer[0] == '/' && sBuffer[1] == '/')
-      		continue;
 
 		hWhiteList.PushString(sBuffer);
 	}
