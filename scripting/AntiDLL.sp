@@ -49,7 +49,7 @@ public void OnPluginStart()
 
     LoadTranslations("antidll.phrases");
 
-    hWhiteList = CreateArray(32);
+    hWhiteList = new ArrayList(32);
     LoadWhiteList();
 
     AutoExecConfig(true, "antidll");
