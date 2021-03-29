@@ -8,8 +8,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-ArrayList hWhiteList;
-
 public Plugin myinfo =
 {
 	name = "AntiDLL Handler",
@@ -32,6 +30,7 @@ enum
 
 bool status;
 int method, blocking_time;
+ArrayList hWhiteList;
 
 public void OnPluginStart()
 {
@@ -64,15 +63,10 @@ public void AD_OnCheatDetected(const int client)
     char sBuffer[32];
     GetClientAuthId(client, AuthId_Steam2, sAuthID, sizeof(sAuthID));
 
-    for (int i; i < hWhiteList.Length; i++)
-	{
-    	hWhiteList.FindString(i, sBuffer, sizeof(sBuffer));
-
-    	if (sBuffer[0] == 0)
-      		continue;
-    	else if(!strcmp(sAuthID, sBuffer))
-      		return;
-	}
+    if(hWhiteList.FindString(sBuffer) != -1)
+    {
+        return;
+    }
 
     if (status) 
     {
@@ -152,7 +146,7 @@ void LoadWhiteList()
 
 		hWhiteList.PushString(sBuffer);
 	}
-	delete hFile;
+	hFile.Close();
 }
 
 public void OnConVarHookEnable(ConVar convar, const char[] oldValue, const char[] newValue)
