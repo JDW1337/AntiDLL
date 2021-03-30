@@ -12,44 +12,64 @@ public Plugin myinfo =
 {
 	name = "AntiDLL Handler",
 	author = "JDW",
-	version	= "1.3",
+	version	= "1.5",
 	url = "WWW"
 };
 
 enum 
 {
-    KICK = 1,
+    NONE=0,
+    KICK,
     BAN,
     SBBAN,
     MABAN
 }
 
 bool status;
-int method, blocking_time;
+int method, blocking_time, iNotification;
+ArrayList hWhiteList;
 
 public void OnPluginStart()
 {
-    ConVar hEnable = CreateConVar("sm_antidll_enable", "1", "Is the plugin included. 1 - enable 0 - disable");
-    status = hEnable.BoolValue;
-    
-    ConVar hMethod = CreateConVar("sm_antidll_method", "1", "1 - Kick, 2 - Ban, 3 - SB Ban, 4 - MA Ban");
-    method = hMethod.IntValue;
-
-    ConVar hBlockingTime = CreateConVar("sm_antidll_blocking_time", "1", "Specified in minutes");
-    blocking_time = hBlockingTime.IntValue;
-
-    HookConVarChange(hEnable, OnConVarHookEnable);
-    HookConVarChange(hMethod, OnConVarHookMethod);
-    HookConVarChange(hBlockingTime, OnConVarHookBlockingTime);
-
     LoadTranslations("antidll.phrases");
 
-    AutoExecConfig(true, "antidll");
+    hWhiteList = new ArrayList(32);
+}
+
+public void OnMapStart()
+{
+    ConfigLoad();
+    LoadWhiteList();
+}
+
+void ConfigLoad()
+{
+    char sPath[PLATFORM_MAX_PATH];
+    BuildPath(Path_SM, sPath, sizeof(sPath), "configs/anti_dll/settings.ini");
+    KeyValues hAD = new KeyValues("AntiDLL");
+
+    if(!hAD.ImportFromFile(sPath))
+        SetFailState("AntiDLL Handler : File is not found (%s)", sPath);
+
+    status = view_as<bool>(hAD.GetNum("ad_enable", 1));
+    method = hAD.GetNum("ad_action_method", 1);
+    iNotification = hAD.GetNum("ad_notification_method", 1);
+    blocking_time = hAD.GetNum("ad_blocking_time", 1);
+
+    hAD.Close();
 }
 
 public void AD_OnCheatDetected(const int client)
 {
     static char message[256];
+
+    char sAuthID[32];
+    GetClientAuthId(client, AuthId_Steam2, sAuthID, sizeof(sAuthID));
+
+    if(hWhiteList.FindString(sAuthID) != -1)
+    {
+        return;
+    }
 
     if (status) 
     {
@@ -57,6 +77,10 @@ public void AD_OnCheatDetected(const int client)
 
         switch (method) 
         {
+            case NONE:
+            {
+                // nothing  
+            }
             case KICK: {
                 KickClient(client, message);    
             }
@@ -73,20 +97,64 @@ public void AD_OnCheatDetected(const int client)
                 LogError("Method not found");
             }
         }
+
+        FormatEx(message, sizeof(message), "%T %N %T", "PREFIX", client, client, "REASON", client);
+
+        if (iNotification & 8)
+        {
+            PrintToChatAll("%s", message);
+        }
+        if (iNotification & 4)
+        {
+            PrintToAdmins("%s", message);
+        }
+        if (iNotification & 2)
+        {
+            PrintToServer("%s", message);
+        }
+        if (iNotification & 1)
+        {
+            LogToFile("addons/sourcemod/logs/AntiDLL.log", "%s", message);
+        }
     }
 }
 
-public void OnConVarHookEnable(ConVar convar, const char[] oldValue, const char[] newValue)
+void PrintToAdmins(const char[] format, any ...)
 {
-    status = convar.BoolValue;
+    char sMsg[256];
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (IsClientInGame(i) && !IsFakeClient(i) && CheckCommandAccess(i, "", ADMFLAG_GENERIC, true))
+        {
+            VFormat(sMsg, sizeof(sMsg), format, 2);
+            PrintToChat(i, "%s", sMsg);
+        }
+    }
 }
 
-public void OnConVarHookMethod(ConVar convar, const char[] oldValue, const char[] newValue)
+void LoadWhiteList()
 {
-    method = convar.IntValue;
+    char sPath[PLATFORM_MAX_PATH];
+    BuildPath(Path_SM, sPath, sizeof(sPath), "configs/anti_dll/WhiteList.ini");
+
+    File hFile;
+    if (!FileExists(sPath) || (hFile = OpenFile(sPath, "r")) == null)
+    {
+        LogError("[AntiDLL] Couldn't load SteamIDs from %s", sPath);
+        return;
+    }
+    char sBuffer[32];
+    while (!hFile.EndOfFile())
+    {
+        hFile.ReadLine(sBuffer, sizeof(sBuffer));
+
+        hWhiteList.PushString(sBuffer);
+    }
+    hFile.Close();
 }
 
-public void OnConVarHookBlockingTime(ConVar convar, const char[] oldValue, const char[] newValue)
+public void OnMapEnd()
 {
-    blocking_time = convar.IntValue;
+    hWhiteList.Clear();
 }
