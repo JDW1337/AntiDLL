@@ -24,7 +24,7 @@ enum
     MABAN
 }
 
-bool bStatus;
+bool status;
 int method, blocking_time, iNotification;
 ArrayList hWhiteList;
 
@@ -43,15 +43,14 @@ public void OnMapStart()
 
 void ConfigLoad()
 {
-    static char sPath[PLATFORM_MAX_PATH];
-    if (!sPath[0])
-        BuildPath(Path_SM, sPath, sizeof(sPath), "configs/AntiDLL/settings.ini");
+    char sPath[PLATFORM_MAX_PATH];
+    BuildPath(Path_SM, sPath, sizeof(sPath), "configs/AntiDLL/settings.ini");
     KeyValues hAD = new KeyValues("AntiDLL");
 
     if (!hAD.ImportFromFile(sPath))
         SetFailState("AntiDLL Handler : File is not found (%s)", sPath);
 
-    bStatus = view_as<bool>(hAD.GetNum("ad_enable", 1));
+    status = view_as<bool>(hAD.GetNum("ad_enable", 1));
     method = hAD.GetNum("ad_action_method", 1);
     iNotification = hAD.GetNum("ad_notification_method", 1);
     blocking_time = hAD.GetNum("ad_blocking_time", 1);
@@ -128,12 +127,8 @@ void PrintToAdmins(const char[] format, any ...)
 
 void LoadWhiteList()
 {
-    static char sPath[PLATFORM_MAX_PATH];
-    if (hWhiteList.Length != 0)
-        hWhiteList.Clear();
-
-    if (!sPath[0])
-        BuildPath(Path_SM, sPath, sizeof(sPath), "configs/AntiDLL/WhiteList.ini");
+    char sPath[PLATFORM_MAX_PATH];
+    BuildPath(Path_SM, sPath, sizeof(sPath), "configs/AntiDLL/WhiteList.ini");
 
     File hFile;
     if (!FileExists(sPath) || (hFile = OpenFile(sPath, "r")) == null)
