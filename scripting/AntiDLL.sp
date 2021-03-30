@@ -18,7 +18,8 @@ public Plugin myinfo =
 
 enum 
 {
-    KICK = 1,
+    NONE=0
+    KICK,
     BAN,
     SBBAN,
     MABAN
@@ -76,6 +77,10 @@ public void AD_OnCheatDetected(const int client)
 
         switch (method) 
         {
+            case NONE:
+            {
+                // nothing  
+            }
             case KICK: {
                 KickClient(client, message);    
             }
