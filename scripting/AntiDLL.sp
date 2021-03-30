@@ -47,7 +47,7 @@ void ConfigLoad()
     BuildPath(Path_SM, sPath, sizeof(sPath), "configs/anti_dll/settings.ini");
     KeyValues hAD = new KeyValues("AntiDLL");
 
-    if(!FileToKeyValues(hAD, sPath))
+    if(!hAD.ImportFromFile(sPath))
         SetFailState("AntiDLL Handler : File is not found (%s)", sPath);
 
     status = view_as<bool>(hAD.GetNum("ad_enable", 1));
