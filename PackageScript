@@ -12,7 +12,9 @@ folder_list = [
   'addons/sourcemod/scripting/include',
   'addons/sourcemod/gamedata/antidll.games',
   'addons/sourcemod/translations',
-  'addons/sourcemod/data/antidll'
+  'addons/sourcemod/data/antidll',
+  'addons/sourcemod/plugins',
+  'addons/sourcemod/configs/anti_dll',
 ]
 
 # Create the distribution folder hierarchy.
@@ -60,12 +62,16 @@ CopyFiles('data/antidll', 'addons/sourcemod/data/antidll',
   ]
 )
 
-# Config Files
-#CopyFiles('configs', 'addons/sourcemod/configs',
-#  [ 'configfile.cfg',
-#  'otherconfig.cfg,
-#  ]
-#)
+CopyFiles('plugins', 'addons/sourcemod/plugins',
+  [ 'AntiDLL.smx',
+  ]
+)
+
+CopyFiles('configs/anti_dll', 'addons/sourcemod/configs/anti_dll',
+  [ 'settings.ini',
+  'WhiteList.ini',
+  ]
+)
 
 # Copy binaries.
 for cxx_task in Extension.extensions:

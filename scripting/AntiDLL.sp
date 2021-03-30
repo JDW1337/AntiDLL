@@ -148,7 +148,7 @@ void LoadWhiteList()
     while (!hFile.EndOfFile())
     {
         hFile.ReadLine(sBuffer, sizeof(sBuffer));
-
+        if (!sBuffer[0]) continue;
         hWhiteList.PushString(sBuffer);
     }
     hFile.Close();
