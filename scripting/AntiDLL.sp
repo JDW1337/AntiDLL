@@ -44,10 +44,10 @@ public void OnMapStart()
 void ConfigLoad()
 {
     char sPath[PLATFORM_MAX_PATH];
-    BuildPath(Path_SM, sPath, sizeof(sPath), "configs/AntiDLL/settings.ini");
+    BuildPath(Path_SM, sPath, sizeof(sPath), "configs/anti_dll/settings.ini");
     KeyValues hAD = new KeyValues("AntiDLL");
 
-    if (!hAD.ImportFromFile(sPath))
+    if(!FileToKeyValues(hAD, sPath))
         SetFailState("AntiDLL Handler : File is not found (%s)", sPath);
 
     status = view_as<bool>(hAD.GetNum("ad_enable", 1));
@@ -92,21 +92,24 @@ public void AD_OnCheatDetected(const int client)
                 LogError("Method not found");
             }
         }
+
+        FormatEx(message, sizeof(message), "%T %N %T", "PREFIX", client, client, "REASON", client);
+
         if (iNotification & 8)
         {
-            PrintToChatAll("%N %s", client, message);
+            PrintToChatAll("%s", message);
         }
         if (iNotification & 4)
         {
-            PrintToAdmins("%N %s", client, message);
+            PrintToAdmins("%s", message);
         }
         if (iNotification & 2)
         {
-            PrintToServer("%N %s", client, message);
+            PrintToServer("%s", message);
         }
         if (iNotification & 1)
         {
-            LogToFile("addons/sourcemod/logs/AntiDLL.log", "%N %s", client, message);
+            LogToFile("addons/sourcemod/logs/AntiDLL.log", "%s", message);
         }
     }
 }
@@ -128,7 +131,7 @@ void PrintToAdmins(const char[] format, any ...)
 void LoadWhiteList()
 {
     char sPath[PLATFORM_MAX_PATH];
-    BuildPath(Path_SM, sPath, sizeof(sPath), "configs/AntiDLL/WhiteList.ini");
+    BuildPath(Path_SM, sPath, sizeof(sPath), "configs/anti_dll/WhiteList.ini");
 
     File hFile;
     if (!FileExists(sPath) || (hFile = OpenFile(sPath, "r")) == null)
@@ -144,4 +147,9 @@ void LoadWhiteList()
         hWhiteList.PushString(sBuffer);
     }
     hFile.Close();
+}
+
+public void OnMapEnd()
+{
+    hWhiteList.Clear();
 }
