@@ -121,6 +121,27 @@ jobs:
         with:
           path: AntiDLL
           
+      - name: Compiling AntiDLL plugin (Linux)
+        if: runner.os == 'Linux'
+        working-directory: AntiDLL
+        run: |
+          mkdir plugins
+          wget "http://www.sourcemod.net/latest.php?version=1.10&os=linux" -O sourcemod.tar.gz
+          tar -xzf sourcemod.tar.gz
+          chmod +x addons/sourcemod/scripting/spcomp
+          cp -r scripting/include addons/sourcemod/scripting
+          addons/sourcemod/scripting/./spcomp scripting/AntiDLL.sp -o plugins/AntiDLL.smx
+          
+      - name: Compiling AntiDLL plugin (Windows)
+        if: runner.os == 'Windows'
+        working-directory: AntiDLL
+        run: |
+          mkdir plugins
+          Invoke-WebRequest "http://www.sourcemod.net/latest.php?version=1.10&os=windows" -OutFile sourcemod.zip
+          Expand-Archive -Path sourcemod.zip -DestinationPath sm
+          Copy-Item -Path scripting\include\* -Destination sm/addons/sourcemod/scripting/include -Recurse
+          sm\addons\sourcemod\scripting\spcomp.exe scripting/AntiDLL.sp -o plugins/AntiDLL.smx
+
       - name: Compiling AntiDLL files
         working-directory: AntiDLL
         run: |

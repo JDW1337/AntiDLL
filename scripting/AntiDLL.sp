@@ -18,7 +18,7 @@ public Plugin myinfo =
 
 enum 
 {
-    NONE=0
+    NONE=0,
     KICK,
     BAN,
     SBBAN,
@@ -148,7 +148,7 @@ void LoadWhiteList()
     while (!hFile.EndOfFile())
     {
         hFile.ReadLine(sBuffer, sizeof(sBuffer));
-
+        if (!sBuffer[0]) continue;
         hWhiteList.PushString(sBuffer);
     }
     hFile.Close();
