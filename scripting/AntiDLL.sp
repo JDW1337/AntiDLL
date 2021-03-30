@@ -60,10 +60,9 @@ public void AD_OnCheatDetected(const int client)
     static char message[256];
 
     char sAuthID[32];
-    char sBuffer[32];
     GetClientAuthId(client, AuthId_Steam2, sAuthID, sizeof(sAuthID));
 
-    if(hWhiteList.FindString(sBuffer) != -1)
+    if(hWhiteList.FindString(sAuthID) != -1)
     {
         return;
     }
