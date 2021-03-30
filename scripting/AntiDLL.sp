@@ -18,7 +18,7 @@ public Plugin myinfo =
 
 enum 
 {
-    NONE=0
+    NONE=0,
     KICK,
     BAN,
     SBBAN,
