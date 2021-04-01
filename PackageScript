@@ -14,7 +14,7 @@ folder_list = [
   'addons/sourcemod/translations',
   'addons/sourcemod/data/antidll',
   'addons/sourcemod/plugins',
-  'addons/sourcemod/configs/anti_dll',
+  'addons/sourcemod/configs/antidll',
 ]
 
 # Create the distribution folder hierarchy.
@@ -67,9 +67,9 @@ CopyFiles('plugins', 'addons/sourcemod/plugins',
   ]
 )
 
-CopyFiles('configs/anti_dll', 'addons/sourcemod/configs/anti_dll',
+CopyFiles('configs/antidll', 'addons/sourcemod/configs/antidll',
   [ 'settings.ini',
-  'WhiteList.ini',
+  'whitelist.ini',
   ]
 )
 
