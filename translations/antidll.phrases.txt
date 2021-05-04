@@ -4,10 +4,12 @@
     {
         "ru" "[AntiDLL]"
         "en" "[AntiDLL]"
+        "pt" "[AntiDLL]"
     }
     "REASON"
     {
         "ru" "Использование стороннего ПО"
         "en" "Using third-party software"
+        "pt" "Usando software de terceiros"
     }
 }
