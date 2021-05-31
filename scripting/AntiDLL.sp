@@ -25,7 +25,7 @@ enum
 	MABAN
 }
 
-bool status, bDetect[MAXPLAYERS + 1] = {false,...};
+bool status, bDetect[MAXPLAYERS + 1];
 int method, blocking_time, iNotification;
 ArrayList hWhiteList;
 
@@ -81,6 +81,14 @@ public void OnClientAuthorized(int iClient)
 	if(bDetect[iClient])
 	{
 		PlayerAction(iClient);
+	}
+}
+
+public void OnClientDisconnect(int iClient)
+{
+	if(bDetect[iClient])
+	{
+		bDetect[iClient] = false;
 	}
 }
 
