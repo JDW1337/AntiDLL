@@ -12,7 +12,7 @@ public Plugin myinfo =
 {
 	name = "AntiDLL Handler", 
 	author = "JDW", 
-	version = "1.6", 
+	version = "1.7", 
 	url = "WWW"
 };
 
@@ -25,7 +25,7 @@ enum
 	MABAN
 }
 
-bool status;
+bool status, bDetect[MAXPLAYERS + 1];
 int method, blocking_time, iNotification;
 ArrayList hWhiteList;
 
@@ -64,7 +64,35 @@ void ConfigLoad()
 	hAD.Close();
 }
 
-public void AD_OnCheatDetected(const int client)
+public void AD_OnCheatDetected(const int iClient)
+{
+	if (IsClientInGame(iClient))
+	{
+		PlayerAction(iClient);
+	}
+	else
+	{
+		bDetect[iClient] = true;
+	}
+}
+
+public void OnClientAuthorized(int iClient)
+{
+	if(bDetect[iClient])
+	{
+		PlayerAction(iClient);
+	}
+}
+
+public void OnClientDisconnect(int iClient)
+{
+	if(bDetect[iClient])
+	{
+		bDetect[iClient] = false;
+	}
+}
+
+void PlayerAction(int client)
 {
 	static char message[256];
 	
@@ -107,19 +135,19 @@ public void AD_OnCheatDetected(const int client)
 		
 		if (iNotification & 8)
 		{
-			PrintToChatAll("%s", message);
+			PrintToChatAll(message);
 		}
 		if (iNotification & 4)
 		{
-			PrintToAdmins("%s", message);
+			PrintToAdmins(message);
 		}
 		if (iNotification & 2)
 		{
-			PrintToServer("%s", message);
+			PrintToServer(message);
 		}
 		if (iNotification & 1)
 		{
-			LogToFile("addons/sourcemod/logs/AntiDLL.log", "%s", message);
+			LogToFile("addons/sourcemod/logs/AntiDLL.log", message);
 		}
 	}
 }
@@ -133,7 +161,7 @@ void PrintToAdmins(const char[] format, any...)
 		if (IsClientInGame(i) && !IsFakeClient(i) && CheckCommandAccess(i, "", ADMFLAG_GENERIC, true))
 		{
 			VFormat(sMsg, sizeof(sMsg), format, 2);
-			PrintToChat(i, "%s", sMsg);
+			PrintToChat(i, sMsg);
 		}
 	}
 }
