@@ -131,7 +131,7 @@ void PlayerAction(int client)
 			}
 		}
 		
-		FormatEx(message, sizeof(message), "%T %L %T", "PREFIX", client, "REASON");
+		FormatEx(message, sizeof(message), "%T %L %T", "PREFIX", client, client, "REASON", client);
 		
 		if (iNotification & 8)
 		{
