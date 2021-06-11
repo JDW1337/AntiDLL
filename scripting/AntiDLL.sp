@@ -106,7 +106,7 @@ void PlayerAction(int client)
 	
 	if (status)
 	{
-		FormatEx(message, sizeof(message), "%T%T", "PREFIX", client, "REASON", client);
+		FormatEx(message, sizeof(message), "%T %T", "PREFIX", client, "REASON", client);
 		
 		switch (method)
 		{
