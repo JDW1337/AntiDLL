@@ -33,10 +33,10 @@ public void OnPluginStart()
 {
 	LoadTranslations("antidll.phrases");
 	
-	RegAdminCmd("sm_ad_config_reload", CommandReloadConfig, ADMFLAG_GENERIC, "Reloads AntiDLL Config");
-	RegAdminCmd("sm_ad_whitelist_reload", CommandReloadWhiteList, ADMFLAG_GENERIC, "Reloads AntiDLL WhiteList");
-	RegAdminCmd("sm_ad_whitelist_list", CommandPrintWhiteList, ADMFLAG_GENERIC, "List all SteamIDs in AntiDLL WhiteList");
-	RegAdminCmd("sm_ad_whitelist_add", CommandAddWhiteList, ADMFLAG_CONVARS, "Adds a SteamID to the AntiDLL WhiteList");
+	RegAdminCmd("sm_ad_config_reload", CommandReloadConfig, ADMFLAG_ROOT, "Reloads AntiDLL Config");
+	RegAdminCmd("sm_ad_whitelist_reload", CommandReloadWhiteList, ADMFLAG_ROOT, "Reloads AntiDLL WhiteList");
+	RegAdminCmd("sm_ad_whitelist_add", CommandAddWhiteList, ADMFLAG_ROOT, "Adds a SteamID to the AntiDLL WhiteList");
+	RegAdminCmd("sm_ad_whitelist_list", CommandPrintWhiteList, ADMFLAG_BAN, "List all SteamIDs in AntiDLL WhiteList");
 	
 	hWhiteList = new ArrayList(32);
 }
@@ -106,7 +106,7 @@ void PlayerAction(int client)
 	
 	if (status)
 	{
-		FormatEx(message, sizeof(message), "%T%T", "PREFIX", client, "REASON", client);
+		FormatEx(message, sizeof(message), "%T %T", "PREFIX", client, "REASON", client);
 		
 		switch (method)
 		{
@@ -158,7 +158,7 @@ void PrintToAdmins(const char[] format, any...)
 	
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsClientInGame(i) && !IsFakeClient(i) && CheckCommandAccess(i, "", ADMFLAG_GENERIC, true))
+		if (IsClientInGame(i) && !IsFakeClient(i) && CheckCommandAccess(i, "", ADMFLAG_BAN, true))
 		{
 			VFormat(sMsg, sizeof(sMsg), format, 2);
 			PrintToChat(i, sMsg);
