@@ -12,7 +12,7 @@ public Plugin myinfo =
 {
 	name = "AntiDLL Handler", 
 	author = "JDW", 
-	version = "1.7", 
+	version = "1.7.1", 
 	url = "WWW"
 };
 
@@ -25,7 +25,7 @@ enum
 	MABAN
 }
 
-bool status, bDetect[MAXPLAYERS + 1];
+bool status, bDetect[MAXPLAYERS + 1], bBanned[MAXPLAYERS + 1];
 int method, blocking_time, iNotification;
 ArrayList hWhiteList;
 
@@ -90,6 +90,17 @@ public void OnClientDisconnect(int iClient)
 	{
 		bDetect[iClient] = false;
 	}
+	if(bBanned[iClient])
+	{
+		bBanned[iClient] = false;
+	}
+}
+
+public Action MAOnClientConnectBan(int iClient)
+{
+	bBanned[iClient] = true;
+
+	return Plugin_Changed;
 }
 
 void PlayerAction(int client)
@@ -124,7 +135,8 @@ void PlayerAction(int client)
 				SBPP_BanPlayer(0, client, blocking_time, message);
 			}
 			case MABAN: {
-				MABanPlayer(0, client, MA_BAN_STEAM, blocking_time, message);
+				if(!bBanned[client])
+					MABanPlayer(0, client, MA_BAN_STEAM, blocking_time, message);
 			}
 			default: {
 				LogError("Method not found");
@@ -203,7 +215,7 @@ public Action CommandAddWhiteList(int iClient, int iArgs)
 	char sPath[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sPath, sizeof(sPath), "configs/antidll/whitelist.ini");
 	File hFile;
-	if (!FileExists(sPath) || (hFile = OpenFile(sPath, "a")) == null)
+	if (FileExists(sPath) || (hFile = OpenFile(sPath, "a")) != null)
 	{
 		hFile.WriteLine(sSteamID);
 		ReplyToCommand(iClient, "[SM] %s successfully added to whitelist", sSteamID);
