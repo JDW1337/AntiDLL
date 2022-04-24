@@ -40,7 +40,7 @@
 /* Basic information exposed publicly */
 #define SMEXT_CONF_NAME			"AntiDLL"
 #define SMEXT_CONF_DESCRIPTION	"Mini protection against internal cheats"
-#define SMEXT_CONF_VERSION		"1.4 TEST"
+#define SMEXT_CONF_VERSION		"1.4.1"
 #define SMEXT_CONF_AUTHOR		"JDW"
 #define SMEXT_CONF_URL			"discord.gg/swZD3vUt5C"
 #define SMEXT_CONF_LOGTAG		"AntiDLL"

@@ -48,7 +48,7 @@ DETOUR_DECL_MEMBER1(ListenEvents, bool, CLC_ListenEvents*, msg)
 		{
 			counter++;
 			#if SOURCE_ENGINE == SE_CSS
-				if (counter > 47) 
+				if (counter > 48) 
 				{
 					detected = true;
 				}
@@ -80,6 +80,7 @@ bool AntiDLL::SDK_OnLoad(char* error, size_t maxlen, bool late)
 		return false;
 	}
 
+	#if SOURCE_ENGINE == SE_CSGO
 	char path[PLATFORM_MAX_PATH];
 	smutils->BuildPath(Path_SM, path, PLATFORM_MAX_PATH, "data/antidll/events_detection.txt");
 
@@ -103,6 +104,7 @@ bool AntiDLL::SDK_OnLoad(char* error, size_t maxlen, bool late)
     }
 
 	file.close();
+	#endif
 
 	CDetourManager::Init(smutils->GetScriptingEngine(), pGameConfig);
 	pDetour = DETOUR_CREATE_MEMBER(ListenEvents, "Signature");
