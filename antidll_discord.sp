@@ -67,9 +67,9 @@ public void AD_OnCheatDetected(const int client)
 	MessageEmbed Embed = new MessageEmbed();
 
 	Embed.SetColor("#FA8120");
-	Embed.AddField("Host:", hostname, false);
+	Embed.AddField("Host:", hostname, true);
 	Embed.AddField("IP:", serverip, false);
-	Embed.AddField("Player:", Profil, true);
+	Embed.AddField("Player:", Profil, false);
 	Embed.AddField("SteamID:", SteamID, false);
 	Embed.SetFooter(szBuffer);
 	hook.Embed(Embed);
