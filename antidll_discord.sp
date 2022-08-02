@@ -61,7 +61,7 @@ public void AD_OnCheatDetected(const int client)
 
 	DiscordWebHook hook = new DiscordWebHook(Discord_WebHook);
 	hook.SlackMode      = true;
-	hook.SetUsername(Discord_WebHook);
+	hook.SetUsername(Discord_BotName);
 	hook.SetAvatar(Discord_Avatar);
 
 	MessageEmbed Embed = new MessageEmbed();
